@@ -21,9 +21,8 @@ def fit_zero_intercept_lin_model(x: np.ndarray, y: np.ndarray) -> float:
     :return: theta 
     """
 
-    # TODO: implement the equation for theta containing sums
-    theta = None
-    return theta
+    # Implemented equation for theta containing sums
+    return sum(y) / sum(x)
 
 
 def bonus_fit_lin_model_with_intercept_using_pinv(x: np.ndarray, y: np.ndarray) -> Tuple[float, float]:

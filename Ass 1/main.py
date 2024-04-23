@@ -27,9 +27,12 @@ def task_1():
 
     ### --- Use Model 1 (zero-intercept lin. model, that is, fit the model using fit_zero_intercept_lin_model)    
     estimated_params_per_memristor_model1 = np.zeros(n_memristor)
+
     for i in range(n_memristor):
-        x, y = None, None # TODO: extract the corresponding entries from the data array
-        theta = None # TODO: call the appropriate function with x and y
+        # Extracts the corresponding entries from the data array
+        x, y = data[i][:,0], data[i][:, 1]
+        
+        theta = fit_zero_intercept_lin_model(x, y) # Call the appropriate function with x and y
         estimated_params_per_memristor_model1[i] = theta
 
     # Visualize the data and the best fit for each memristor
@@ -37,7 +40,7 @@ def task_1():
 
     print('\nModel 1 (zero-intercept linear model).')
     print(f'Estimated theta per memristor: {estimated_params_per_memristor_model1}')
-
+    
     ### --- Use Model 2 (lin. model with intercept, that is, fit the model using fit_lin_model_with_intercept)    
     estimated_params_per_memristor_model2 = np.zeros((n_memristor, 2))
     for i in range(n_memristor):
