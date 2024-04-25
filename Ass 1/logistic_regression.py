@@ -77,4 +77,4 @@ def logistic_regression_params_sklearn():
     Read the docs at https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html
     """
     # TODO: Try different `penalty` parameters for the LogisticRegression model
-    return {'penalty': 'l1'}
+    return {'penalty': 'l2'}
