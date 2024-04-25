@@ -110,7 +110,7 @@ def task_2():
 
         # Train the classifier
         custom_params = logistic_regression_params_sklearn()
-        clf = LogisticRegression(**custom_params, max_iter=4000)
+        clf = LogisticRegression(**custom_params, solver="liblinear")
         # Fit the model to the data using the `fit` method of the classifier `clf`
         clf.fit(X_train, y_train)
         # Use the `score` method of the classifier `clf` to calculate accuracy
