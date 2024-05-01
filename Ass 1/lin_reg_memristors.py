@@ -11,7 +11,7 @@ class MemristorFault(Enum):
 
 
 def model_to_use_for_fault_classification():
-    return None # TODO: change this to either 1 or 2 (depending on which model you decide to use)
+    return 1 # TODO: change this to either 1 or 2 (depending on which model you decide to use)
 
 
 def fit_zero_intercept_lin_model(x: np.ndarray, y: np.ndarray) -> float:
@@ -56,7 +56,7 @@ def classify_memristor_fault_with_model1(theta: float) -> MemristorFault:
     :param theta: the estimated parameter of the zero-intercept linear model
     :return: the type of fault
     """
-    # TODO: Implement either this function, or the function `classify_memristor_fault_with_model2`,
+    #       Implement either this function, or the function `classify_memristor_fault_with_model2`,
     #       depending on which model you decide to use.
 
     # If you decide to use this function, remove the line `raise NotImplementedError()` and
@@ -64,7 +64,16 @@ def classify_memristor_fault_with_model1(theta: float) -> MemristorFault:
     # For example, return MemristorFault.IDEAL if you decide that the given theta does not indicate a fault, and so on.
     # Use if-statements and choose thresholds for the parameters that make sense to you.
 
-    raise NotImplementedError()
+    if theta > 0 and abs(theta - 1.0) < 0.3:
+        return MemristorFault.IDEAL
+    elif theta < 0 and abs(theta) > 0.3:
+        return MemristorFault.DISCORDANT
+    elif (theta >= 0.3 and theta <= 0.7) or (theta > 1.3):
+        return MemristorFault.CONCORDANT
+    else:
+        return MemristorFault.STUCK
+
+    #raise NotImplementedError()
 
 
 def classify_memristor_fault_with_model2(theta0: float, theta1: float) -> MemristorFault:
