@@ -44,8 +44,9 @@ def task_1():
     ### --- Use Model 2 (lin. model with intercept, that is, fit the model using fit_lin_model_with_intercept)    
     estimated_params_per_memristor_model2 = np.zeros((n_memristor, 2))
     for i in range(n_memristor):
-        x, y = None, None # TODO: extract the corresponding entries from the data array
-        theta0, theta1 = None, None # TODO: call the appropriate function with x and y
+        x, y = data[i][:,0], data[i][:,1] # TODO- DONE: extract the corresponding entries from the data array
+        theta0, theta1 =  fit_lin_model_with_intercept(x, y)
+       # TODO - DONE: call the appropriate function with x and y
         # TODO: If you have implemented the bonus task, you can call the bonus function instead to check
         #  if the results are the same
         estimated_params_per_memristor_model2[i, :] = [theta0, theta1]
@@ -149,9 +150,9 @@ def task_3():
     # Plot the Function, to see how it looks like
     plot_function(ackley)
 
-    # TODO: Choose a random starting point using samples from a standard normal distribution
-    x0 = None
-    y0 = None
+    # TODO - DONE : Choose a random starting point using samples from a standard normal distribution
+    x0 = np.random.normal(0, 1)
+    y0 = np.random.normal(0, 1)
     print(f'{x0:.4f}, {y0:.4f}')
 
     # TODO: Call the function `gradient_descent` with a chosen configuration of hyperparameters,

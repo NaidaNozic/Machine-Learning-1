@@ -20,8 +20,20 @@ def gradient_descent(f, df, x0, y0, learning_rate, lr_decay, num_iters):
     """
     f_list = np.zeros(num_iters) # Array to store the function values over iterations
     x, y = x0, y0
-    # TODO: Implement the gradient descent algorithm with a decaying learning rate
-    pass
+    # TODO - DONE: Implement the gradient descent algorithm with a decaying learning rate
+    for i in range(num_iters):
+        # Calculate gradients for both coordinates
+        dx, dy = df(x, y)
+
+        # Update the coordinates by moving against the gradient
+        x -= learning_rate * dx
+        y -= learning_rate * dy
+
+        # Record the function value at the current coordinates
+        f_list[i] = f(x, y)
+
+        # Apply decay to the learning rate
+        learning_rate *= lr_decay
 
     return x, y, f_list
 
@@ -33,8 +45,14 @@ def ackley(x, y):
     :param y: Y coordinate
     :return: f(x, y) where f is the Ackley function
     """
-    # TODO: Implement the Ackley function (as specified in the Assignment 1 sheet)
-    return None
+    # TODO - DONE: Implement the Ackley function (as specified in the Assignment 1 sheet)
+    # First part of the function involving exponentiation
+    part1 = -20 * np.exp(-0.2 * np.sqrt(0.5 * (x**2 + y**2)))
+    # Second part of the function involving cosines and exponentiation
+    part2 = -np.exp(0.5 * (np.cos(2 * np.pi * x) + np.cos(2 * np.pi * y)))
+    # Final Ackley function value
+    value = part1 + part2 + np.e + 20
+    return value
 
 
 def gradient_ackley(x, y):
@@ -44,9 +62,16 @@ def gradient_ackley(x, y):
     :param y: Y coordinate
     :return: \nabla f(x, y) where f is the Ackley function
     """
-    # TODO: Implement partial derivatives of Ackley function w.r.t. x and y
-    df_dx = None
-    df_dy = None
+    # TODO- DONE: Implement partial derivatives of Ackley function w.r.t. x and y
+    # Derived expressions for partial derivatives of the Ackley function w.r.t. x and y
+    exp_component = np.exp(-0.2 * np.sqrt(0.5 * (x**2 + y**2)))
+    cos_component = np.exp(0.5 * (np.cos(2 * np.pi * x) + np.cos(2 * np.pi * y)))
+
+    # Partial derivative with respect to x
+    df_dx = 2 * exp_component * (x / np.sqrt(0.5 * (x**2 + y**2))) + np.pi * cos_component * np.sin(2 * np.pi * x)
+
+    # Partial derivative with respect to y
+    df_dy = 2 * exp_component * (y / np.sqrt(0.5 * (x**2 + y**2))) + np.pi * cos_component * np.sin(2 * np.pi * y)
 
     gradient = np.array([df_dx, df_dy])
     return gradient

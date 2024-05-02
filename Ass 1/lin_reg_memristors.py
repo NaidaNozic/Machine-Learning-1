@@ -10,6 +10,7 @@ class MemristorFault(Enum):
     CONCORDANT = 3
 
 
+
 def model_to_use_for_fault_classification():
     return 1 # TODO: change this to either 1 or 2 (depending on which model you decide to use)
 
@@ -22,7 +23,8 @@ def fit_zero_intercept_lin_model(x: np.ndarray, y: np.ndarray) -> float:
     """
 
     # Implemented equation for theta containing sums
-    return sum(y) / sum(x)
+    theta = np.sum(x * y) / np.sum(x**2)
+    return theta
 
 
 def bonus_fit_lin_model_with_intercept_using_pinv(x: np.ndarray, y: np.ndarray) -> Tuple[float, float]:
@@ -45,9 +47,18 @@ def fit_lin_model_with_intercept(x: np.ndarray, y: np.ndarray) -> Tuple[float, f
     :return: theta_0, theta_1 
     """
 
-    # TODO: implement the equation for theta_0 and theta_1 containing sums
-    theta_0 = None
-    theta_1 = None
+    # TODO - DONE: implement the equation for theta_0 and theta_1 containing sums
+
+    n = len(x)
+    sum_x = np.sum(x)
+    sum_y = np.sum(y)
+    sum_xy = np.sum(x * y)
+    sum_x2 = np.sum(x**2)
+    
+    denominator = n * sum_x2 - sum_x**2
+    theta_1 = (n * sum_xy - sum_x * sum_y) / denominator
+    theta_0 = (sum_y - theta_1 * sum_x) / n
+
     return theta_0, theta_1
 
 
