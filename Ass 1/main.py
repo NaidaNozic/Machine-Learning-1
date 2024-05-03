@@ -148,7 +148,7 @@ def task_3():
     print('\n---- Task 3 ----')
 
     # Plot the Function, to see how it looks like
-    plot_function(ackley)
+    #plot_function(ackley)
 
     # TODO - DONE : Choose a random starting point using samples from a standard normal distribution
     x0 = np.random.normal(0, 1)
@@ -157,9 +157,9 @@ def task_3():
 
     # TODO-DONE: Call the function `gradient_descent` with a chosen configuration of hyperparameters,
     #  i.e., learning_rate, lr_decay, and num_iters. Try out lr_decay=1 as well as values for lr_decay that are < 1.
-    learning_rate = 0.1
-    lr_decay = 0.8
-    num_iters = 800
+    learning_rate = 0.4
+    lr_decay = 0.5
+    num_iters = 15
     x, y, f_list = gradient_descent(ackley, gradient_ackley, x0, y0, learning_rate, lr_decay, num_iters)
 
     # Print the point that is found after `max_iter` solution
