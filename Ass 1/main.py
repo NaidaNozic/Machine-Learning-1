@@ -155,16 +155,24 @@ def task_3():
     y0 = np.random.normal(0, 1)
     print(f'{x0:.4f}, {y0:.4f}')
 
-    # TODO: Call the function `gradient_descent` with a chosen configuration of hyperparameters,
+    # TODO-DONE: Call the function `gradient_descent` with a chosen configuration of hyperparameters,
     #  i.e., learning_rate, lr_decay, and num_iters. Try out lr_decay=1 as well as values for lr_decay that are < 1.
-    x, y, f_list = None, None, None
+    learning_rate = 0.1
+    lr_decay = 0.8
+    num_iters = 800
+    x, y, f_list = gradient_descent(ackley, gradient_ackley, x0, y0, learning_rate, lr_decay, num_iters)
 
     # Print the point that is found after `max_iter` solution
     print(f'{x:.4f}, {y:.4f}')
 
-    # TODO: Use `f_list` to create a plot of the function over iteration.
+    # TODO -DONE: Use `f_list` to create a plot of the function over iteration.
     #  Do not forget to label the plot (xlabel, ylabel, title).
-    pass
+    plt.figure()
+    plt.plot(f_list)
+    plt.xlabel('Iteration')
+    plt.ylabel('Ackley function value')
+    plt.title('Ackley Function Value Over Iterations')
+    plt.show()
 
     print(f'Solution found: f({x:.4f}, {y:.4f})= {ackley(x,y):.4f}' )
     print(f'Global optimum: f(0, 0)= {ackley(0,0):.4f}')
@@ -173,8 +181,8 @@ def task_3():
 def main():
     np.random.seed(33761)
 
-    task_1()
-    task_2()
+    #task_1()
+    #task_2()
     task_3()
 
 
