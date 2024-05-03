@@ -47,8 +47,8 @@ def task_1():
         x, y = data[i][:,0], data[i][:,1] # TODO- DONE: extract the corresponding entries from the data array
         theta0, theta1 =  fit_lin_model_with_intercept(x, y)
        # TODO - DONE: call the appropriate function with x and y
-        # TODO: If you have implemented the bonus task, you can call the bonus function instead to check
-        #  if the results are the same
+        # TODO - DONE: If you have implemented the bonus task, you can call the bonus function instead to check
+        #theta0, theta1 =  bonus_fit_lin_model_with_intercept_using_pinv(x, y)
         estimated_params_per_memristor_model2[i, :] = [theta0, theta1]
 
     # Visualize the data and the best fit for each memristor
@@ -58,7 +58,7 @@ def task_1():
     print(f"Estimated params (theta_0, theta_1) per memristor: {estimated_params_per_memristor_model2}")
 
     fault_types = []
-    # TODO: Use either Model 1 or Model 2 for the decision on memristor fault type.
+    # TODO-DONE: Use either Model 1 or Model 2 for the decision on memristor fault type.
     #  Your choice should be reflected in the `model_to_use_for_fault_classification` function.
     model_to_use = model_to_use_for_fault_classification()
     for i in range(n_memristor):
