@@ -13,7 +13,8 @@ def train_nn_own(X_train: np.ndarray, y_train: np.ndarray) -> MLPClassifierOwn:
     X_train, X_val, y_train, y_val = train_test_split(X_train, y_train,
                                                       test_size=0.2, random_state=42)
 
-    classifier = MLPClassifierOwn(num_epochs=5, alpha=0.0, batch_size=32,
+    # For bonus task in task 2 by setting alpha=0.5 we get test accuracy 0.6780
+    classifier = MLPClassifierOwn(num_epochs=5, alpha=0.5, batch_size=32,
                                   hidden_layer_sizes=(16,), random_state=42)
 
     classifier.fit(X_train, y_train)

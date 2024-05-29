@@ -66,8 +66,8 @@ class MLPClassifierOwn():
         Compute the sum of squared model parameters and weigh this term by alpha/2 * (1 / batch_size).
         Ensure that you return a Scalar object since we need to backpropagate through this term.
         """
-        raise NotImplementedError('[Bonus] L2 Regularization not implemented.')
-        return None
+        sum_of_squares = sum((param ** 2 for param in self.model.parameters()))
+        return self.alpha / 2 * (1 / self.batch_size) * sum_of_squares
 
     def sgd_step(self, learning_rate: float) -> None:
         """
