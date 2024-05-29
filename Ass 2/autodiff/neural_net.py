@@ -38,27 +38,14 @@ class Neuron(Module):
 
         :param x: List of Scalar values, representing the inputs to the neuron
         """
-        # DOne: Implement the forward pass through the neuron.
-        # Step 1: Compute the weighted sum of inputs.
-        # We perform the dot product of the weights and inputs and add the bias.
-        # The expression `wi * xi` performs element-wise multiplication of weights and inputs.
-        # The `sum` function accumulates the results and adds the bias `self.b`.
+        # TODO: Implement the forward pass through the neuron.
+        # Weighted sum of inputs + bias
+        z = sum((wi * xi for wi, xi in zip(self.w, x)), self.b)
 
-        act = sum((wi * xi for wi, xi in zip(self.w, x)), self.b)
-
-        # Step 2: Apply the ReLU activation function if `self.use_relu` is True.
-        # The ReLU function returns the input value if it is positive, otherwise it returns 0.
-        # We use the `relu` method of the Scalar class to apply ReLU.
-        # If `self.use_relu` is False, we simply return the computed weighted sum without any activation.
-        
         if self.use_relu:
-            out = act.relu()
+            return z.relu()
         else:
-            out = act
-
-        # Return the final output which is a Scalar object.
-        return out
-        
+            return z
 
     def parameters(self):
         return self.w + [self.b]
@@ -74,19 +61,16 @@ class FeedForwardLayer(Module):
         :param num_inputs: Number of inputs that each neuron in that layer will receive
         :param num_outputs: Number of neurons in that layer
         """
-        # Done: Initialize the neurons in the layer. `self.neurons` should be a List of Neuron objects.
+        # TODO: Initialize the neurons in the layer. `self.neurons` should be a List of Neuron objects.
         self.neurons = [Neuron(num_inputs, use_relu) for _ in range(num_outputs)]
-        
 
     def __call__(self, x: List[Scalar]) -> List[Scalar]:
         """
         Forward pass through the layer. Return a list of Scalars, where each Scalar is the output of a neuron.
 
-        :return: List of Scalar values, representing the outputs of the layer
+        :param x: List of Scalar values, representing the input features
         """
-        # Compute the output of each neuron in the layer for the given inputs
         return [neuron(x) for neuron in self.neurons]
-        return None
 
     def parameters(self):
         return [p for n in self.neurons for p in n.parameters()]
@@ -105,8 +89,11 @@ class MultiLayerPerceptron(Module):
         :param num_outputs: Number of output neurons
         """
         # TODO: `self.layers` should be a List of FeedForwardLayer objects.
-        self.layers = None
-        raise NotImplementedError('Task 2.3 not implemented')
+        layer_sizes = [num_inputs] + num_hidden + [num_outputs]
+        self.layers = []
+        for i in range(len(layer_sizes) - 1):
+            use_relu = (i < len(layer_sizes) - 2)  # Use ReLU for hidden layers only
+            self.layers.append(FeedForwardLayer(layer_sizes[i], layer_sizes[i + 1], use_relu))
 
     def __call__(self, x: List[Scalar]) -> List[Scalar]:
         """
@@ -116,8 +103,9 @@ class MultiLayerPerceptron(Module):
 
         :param x: List of Scalar values, representing the input features
         """
-        raise NotImplementedError('Task 2.3 not implemented')
-        return None
+        for layer in self.layers:
+            x = layer(x)
+        return x
 
     def parameters(self):
         return [p for layer in self.layers for p in layer.parameters()]

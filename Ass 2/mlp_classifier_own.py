@@ -22,8 +22,11 @@ class MLPClassifierOwn():
 
         :param z: List of Scalar values
         """
-        raise NotImplementedError('Task 2.4 not implemented.')
-        return None
+        max_z = max(z, key=lambda s: s.value)
+        exp_z = [((zi - max_z).exp()) for zi in z]
+        sum_exp_z = sum(exp_z)
+        softmax_output = [(exp_zi / sum_exp_z) for exp_zi in exp_z]
+        return softmax_output
 
     @staticmethod
     def sigmoid(z: Scalar) -> Scalar:
@@ -43,8 +46,7 @@ class MLPClassifierOwn():
         :param y_true: True class index (0-based)
         :param probs: List of Scalar values, representing the predicted probabilities for each class
         """
-        raise NotImplementedError('Task 2.4 not implemented.')
-        return None
+        return -probs[y_true].log()
 
     @staticmethod
     def binary_cross_entropy_loss(y_true: int, prob: Scalar) -> Scalar:
