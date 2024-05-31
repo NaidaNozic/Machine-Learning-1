@@ -42,7 +42,7 @@ def task_1():
     best_gs_nn = perform_grid_search(X_train_pca, y_train)
 
     final_model = best_gs_nn # Done: Choose the best model from *all* previous Tasks
-
+                                                                                
     X_test_pca = pca.transform(X_test)
     show_confusion_matrix_and_classification_report(final_model, X_test_pca, y_test)
 
