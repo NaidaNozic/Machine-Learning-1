@@ -35,7 +35,7 @@ class MLPClassifierOwn():
 
         :param z: Scalar
         """
-        return Scalar(1 / (1 + np.exp(-z.value)))
+        return 1 / (1 + (-z).exp())
 
     @staticmethod
     def multiclass_cross_entropy_loss(y_true: int, probs: List[Scalar]) -> Scalar:
@@ -55,15 +55,8 @@ class MLPClassifierOwn():
         :param y_true: 0 or 1
         :param prob: Scalar between 0 and 1, representing the probability of the positive class
         """
-        epsilon = 1e-15
-        prob_value = np.clip(prob.value, epsilon, 1 - epsilon)  # Clip probability to avoid log(0)
-        
-        if y_true == 1:
-            loss = -np.log(prob_value)
-        else:
-            loss = -np.log(1 - prob_value)
             
-        return Scalar(loss)
+        return -y_true * prob.log() - (1 - y_true) * (1 - prob).log()
 
     def l2_regularization_term(self) -> Scalar:
         """
@@ -91,13 +84,14 @@ class MLPClassifierOwn():
         :param y: Targets
         """
         self.num_classes = len(set(y))
+        print(self.num_classes)
         assert self.num_classes > 1, 'Number of classes must be greater than 1'
-        if self.num_classes == 2:
-            nn_num_outputs = 1
-            raise NotImplementedError('Bonus Task (Binary classification) is not implemented. '
-                                      'Thus, number of classes must be greater than 2 (multi-class classification)')
-        else:
-            nn_num_outputs = self.num_classes
+       # if self.num_classes == 2:
+       #     nn_num_outputs = 1
+       #     raise NotImplementedError('Bonus Task (Binary classification) is not implemented. '
+    #                              'Thus, number of classes must be greater than 2 (multi-class classification)')
+       # else:
+        nn_num_outputs = self.num_classes
 
         random.seed(self.random_state)
         np.random.seed(self.random_state)

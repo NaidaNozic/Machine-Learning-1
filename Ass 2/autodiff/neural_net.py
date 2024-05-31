@@ -88,7 +88,7 @@ class MultiLayerPerceptron(Module):
         :param num_hidden: List of integers, where each integer represents the number of neurons in that hidden layer
         :param num_outputs: Number of output neurons
         """
-        # TODO: `self.layers` should be a List of FeedForwardLayer objects.
+        # Done: `self.layers` should be a List of FeedForwardLayer objects.
         layer_sizes = [num_inputs] + num_hidden + [num_outputs]
         self.layers = []
         for i in range(len(layer_sizes) - 1):
