@@ -34,7 +34,7 @@ def task_1():
     print("----- Task 1.1.4 -----")
     best_reg_nn = train_nn_with_regularization(X_train_pca, y_train)
 
-    best_model_task_1_1 = best_nn # DOne: Choose the best model from the previous Tasks
+    best_model_task_1_1 = best_reg_nn # DOne: Choose the best model from the previous Tasks
     plot_training_loss_curve(best_model_task_1_1)
 
     # Task 1.2   

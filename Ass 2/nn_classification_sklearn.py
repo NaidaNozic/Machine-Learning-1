@@ -22,6 +22,7 @@ def reduce_dimension(X_train: np.ndarray, n_components: int) -> Tuple[np.ndarray
     pca = PCA(n_components=n_components, random_state=42)
     X_train_pca = pca.fit_transform(X_train)
     print(f"Explained variance ratio: {sum(pca.explained_variance_ratio_)}")
+    print(f"Final components: {pca.n_components_}")
     return X_train_pca, pca
 
 
@@ -75,7 +76,7 @@ def train_nn_with_regularization(X_train: np.ndarray, y_train: np.ndarray) -> ML
     X_train, X_val, y_train, y_val = train_test_split(X_train, y_train,
                                                       test_size=0.2, random_state=42)
 
-    # TODO: Use the code from the `train_nn` function, but add regularization to the MLPClassifier.
+    # Done: Use the code from the `train_nn` function, but add regularization to the MLPClassifier.
     #       Again, return the MLPClassifier that you consider to be the best.
     # Define the configurations to test
     configurations = [
@@ -137,7 +138,7 @@ def show_confusion_matrix_and_classification_report(nn: MLPClassifier, X_test: n
     :param X_test: Test features (PCA-projected)
     :param y_test: Test targets
     """
-    # TODO: Use `nn` to compute predictions on `X_test`.
+    # Done: Use `nn` to compute predictions on `X_test`.
     #       Use `confusion_matrix` and `ConfusionMatrixDisplay` to plot the confusion matrix on the test data.
     #       Use `classification_report` to print the classification report.
 
@@ -190,8 +191,10 @@ def perform_grid_search(X_train: np.ndarray, y_train: np.ndarray) -> MLPClassifi
     # Print the best score and the best parameters
     print(f"Best score: {grid_search.best_score_}")
     print(f"Best parameters: {grid_search.best_params_}")
-
+    results = grid_search.cv_results_
+    for mean_score, params in zip(results['mean_test_score'], results['params']):
+        print(f"Mean validation score: {mean_score:.4f} for parameters: {params}")
     # Return the best estimator
     return grid_search.best_estimator_
 
-    return None
+    
