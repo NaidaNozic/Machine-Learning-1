@@ -35,8 +35,7 @@ class MLPClassifierOwn():
 
         :param z: Scalar
         """
-        raise NotImplementedError('[Bonus] Task 3.1 not implemented.')
-        return None
+        return Scalar(1 / (1 + np.exp(-z.value)))
 
     @staticmethod
     def multiclass_cross_entropy_loss(y_true: int, probs: List[Scalar]) -> Scalar:
@@ -56,8 +55,15 @@ class MLPClassifierOwn():
         :param y_true: 0 or 1
         :param prob: Scalar between 0 and 1, representing the probability of the positive class
         """
-        raise NotImplementedError('[Bonus] Task 3.1 not implemented.')
-        return None
+        epsilon = 1e-15
+        prob_value = np.clip(prob.value, epsilon, 1 - epsilon)  # Clip probability to avoid log(0)
+        
+        if y_true == 1:
+            loss = -np.log(prob_value)
+        else:
+            loss = -np.log(1 - prob_value)
+            
+        return Scalar(loss)
 
     def l2_regularization_term(self) -> Scalar:
         """

@@ -38,7 +38,7 @@ class Neuron(Module):
 
         :param x: List of Scalar values, representing the inputs to the neuron
         """
-        # TODO: Implement the forward pass through the neuron.
+        # DOne: Implement the forward pass through the neuron.
         # Weighted sum of inputs + bias
         z = sum((wi * xi for wi, xi in zip(self.w, x)), self.b)
 
@@ -61,7 +61,7 @@ class FeedForwardLayer(Module):
         :param num_inputs: Number of inputs that each neuron in that layer will receive
         :param num_outputs: Number of neurons in that layer
         """
-        # TODO: Initialize the neurons in the layer. `self.neurons` should be a List of Neuron objects.
+        # Done: Initialize the neurons in the layer. `self.neurons` should be a List of Neuron objects.
         self.neurons = [Neuron(num_inputs, use_relu) for _ in range(num_outputs)]
 
     def __call__(self, x: List[Scalar]) -> List[Scalar]:
