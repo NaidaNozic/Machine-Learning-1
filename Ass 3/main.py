@@ -192,14 +192,14 @@ def task3_bonus():
 
 if __name__ == '__main__':
     # Task 1.1 consists of implementing the KNearestNeighborsClassifier class
-    # task1_2()
+    task1_2()
     # Task 1.3 does not need code to be answered
-    # task1_4()
+    task1_4()
 
     # Task 2.1 consists of a pen & paper exercise and the implementation of the LinearSVM class
-    # task2_2()
+    task2_2()
     task2_3()
 
-    # task3_1()
+    task3_1()
     # Task 3.2 is a theory question
-    # task3_bonus()
+    task3_bonus()
