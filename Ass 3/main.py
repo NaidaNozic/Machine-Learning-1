@@ -63,12 +63,38 @@ def task2_2():
 
     X_train, X_test, y_train, y_test = get_toy_dataset(1, remove_outlier=True)
     svm = LinearSVM()
-    # TODO: Use grid search to find suitable parameters.
-    grid_search = None
+    '''param_grid = {
+        'C': 10. ** np.arange(-3, 4),
+        'eta': 10. ** np.arange(-5, -2)
+    }'''
+    param_grid = {
+        'C': 50. ** np.arange(-3, 4),
+        'eta': 10. ** np.arange(-5, -2)
+    }
+    '''param_grid = {
+        'C': 60. ** np.arange(-8, 8),
+        'eta': 10. ** np.arange(-5, -2)
+    }'''
+    # Use grid search to find suitable parameters.
+    grid_search = GridSearchCV(svm, param_grid, cv=5)
+    grid_search.fit(X_train, y_train)
 
-    # TODO: Use the parameters you have found to instantiate a LinearSVM.
-    #       The `fit` method returns a list of scores that you should plot in order to monitor the convergence.
-    svm = None
+    print("best parameters:",grid_search.best_params_)
+    print("cross validated score:",grid_search.best_score_)
+
+    # Use the parameters you have found to instantiate a LinearSVM.
+    # The `fit` method returns a list of scores that you should plot in order to monitor the convergence.
+    best_params = grid_search.best_params_
+    svm = LinearSVM(C=best_params['C'], eta=best_params['eta'])
+    loss_list = svm.fit(X_train, y_train)
+
+    # Plot the loss over iterations
+    plt.figure()
+    plt.plot(loss_list)
+    plt.title('Loss over iterations')
+    plt.xlabel('Iteration')
+    plt.ylabel('Loss')
+    plt.show()
 
     # This plots the decision boundary
     plt.figure()
@@ -80,13 +106,22 @@ def task2_2():
 def task2_3():
     print('-' * 10, 'Task 2.3', '-' * 10)
     for idx in [1, 2, 3]:
-        X_train, X_test, y_train, y_test = get_toy_dataset(idx)
-        svc = SVC(tol=1e-4)
-        # TODO: Perform grid search, decide on suitable parameter ranges
-        #       and state sensible parameter ranges in your report
-        grid_search = None
 
-        # TODO: Using the best parameter settings, report the score on the test dataset (X_test, y_test)
+        X_train, X_test, y_train, y_test = get_toy_dataset(idx)
+        # Perform grid search, decide on suitable parameter ranges
+        # and state sensible parameter ranges in your report
+        param_grid = {'C': [0.1, 1, 10],
+                      'kernel': ['linear', 'rbf'],
+                      'gamma': [0.1, 1, 10]}
+        svc = SVC(tol=1e-4)
+        grid_search = GridSearchCV(svc, param_grid, cv=5)
+        grid_search.fit(X_train, y_train)
+
+        # Using the best parameter settings, report the score on the test dataset (X_test, y_test)
+        print(f"Best parameters - {grid_search.best_params_}, Mean CV accuracy - {grid_search.best_score_}")
+
+        test_accuracy = grid_search.score(X_test, y_test)
+        print(f"Accuracy on test set: {test_accuracy}")
 
         # This plots the decision boundary
         plt.figure()
@@ -157,14 +192,14 @@ def task3_bonus():
 
 if __name__ == '__main__':
     # Task 1.1 consists of implementing the KNearestNeighborsClassifier class
-    task1_2()
+    # task1_2()
     # Task 1.3 does not need code to be answered
-    task1_4()
+    # task1_4()
 
     # Task 2.1 consists of a pen & paper exercise and the implementation of the LinearSVM class
-    task2_2()
+    # task2_2()
     task2_3()
 
-    task3_1()
+    # task3_1()
     # Task 3.2 is a theory question
-    task3_bonus()
+    # task3_bonus()
