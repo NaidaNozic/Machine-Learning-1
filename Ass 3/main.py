@@ -12,21 +12,54 @@ from sklearn.ensemble import RandomForestClassifier
 
 def grid_search_knn_and_plot_decision_boundary(X_train, y_train, X_test, y_test, dataset_name):
     knn = KNearestNeighborsClassifier()
-    # TODO: Use the `GridSearchCV` meta-classifier and search over different values of `k`
+    # Done: Use the `GridSearchCV` meta-classifier and search over different values of `k`
     #       Include the `return_train_score=True` option to get the training accuraciesls
-    grid_search = None
+
+    # Specify the parameter grid to explore various `k` values
+    parameter_grid = {'k': range(1, 101)}
+
+    # Initialize GridSearchCV to determine the optimal `k`
+    grid_search = GridSearchCV(knn, parameter_grid, cv=5, return_train_score=True)
+    grid_search.fit(X_train, y_train)
+    
 
     # this plots the decision boundary
     plt.figure()
     plot_decision_boundary(X_train, grid_search)
     plot_dataset(X_train, y_train, X_test, y_test)
     plt.title(f"Decision boundary for dataset {dataset_name}\nwith k={grid_search.best_params_['k']}")
-    # TODO you should use the plt.savefig(...) function to store your plots before calling plt.show()
+    # Done you should use the plt.savefig(...) function to store your plots before calling plt.show()
+    plt.savefig(f"decision_boundary_{dataset_name}.png")
     plt.show()
 
-    # TODO: Create a plot that shows the mean training and validation scores (y axis)
+    # Done: Create a plot that shows the mean training and validation scores (y axis)
     #       for each k \in {1,...,100} (x axis).
     #       Hint: Check the `cv_results_` attribute of the `GridSearchCV` object
+    # Extract mean training and validation scores from the GridSearchCV results
+    mean_train_scores = grid_search.cv_results_['mean_train_score']
+    mean_test_scores = grid_search.cv_results_['mean_test_score']
+    k_values = range(1, 101)
+
+    # Plot mean training and validation scores for each value of `k`
+    plt.figure()
+    plt.plot(k_values, mean_train_scores, label='Mean Training Score')
+    plt.plot(k_values, mean_test_scores, label='Mean Validation Score')
+    plt.xlabel('k')
+    plt.ylabel('Score')
+    plt.title(f'Mean Training and Validation Scores for Different k Values\nDataset: {dataset_name}')
+    plt.legend()
+    plt.savefig(f"training_validation_scores_{dataset_name}.png")
+    plt.show()
+    # Manually select the best k based on the highest mean validation accuracy
+    
+    optimal_k = k_values[np.argmax(mean_test_scores)]
+    optimal_knn = KNearestNeighborsClassifier(k=optimal_k)
+    optimal_knn.fit(X_train, y_train)
+
+    # Evaluate the classifier performance on the test set with the selected k
+    test_accuracy = optimal_knn.score(X_test, y_test)
+    print(f"Optimal k for {dataset_name} dataset (manual selection): {optimal_k}")
+    print(f"Test set accuracy for {dataset_name} dataset with k={optimal_k}: {test_accuracy * 100:.2f}%")
 
 
 def task1_2():
@@ -41,20 +74,24 @@ def task1_4():
     dataset_name = '2 (noisy)'
     X_train, X_test, y_train, y_test = get_toy_dataset(2, apply_noise=True)
     for k in [1, 30, 100]:
-        # TODO: Fit your KNearestNeighborsClassifier with k in {1, 30, 100} and plot the decision boundaries.
+        # Done: Fit your KNearestNeighborsClassifier with k in {1, 30, 100} and plot the decision boundaries.
         #       You can use the `cross_val_score` method to manually perform cross-validation.
         #       Report the mean cross-validated scores.
-        knn = None
+        knn = KNearestNeighborsClassifier(k=k)
+        knn.fit(X_train, y_train)
 
-        # This plots the decision boundaries without the test set
-        # (we simply don't pass the test sets to `plot_dataset`).
+        # Perform cross-validation and report the mean cross-validated scores
+        cv_scores = cross_val_score(knn, X_train, y_train, cv=5)
+        print(f"Mean cross-validated score for k={k}: {np.mean(cv_scores):.2f}")
+
+        # Plot decision boundaries without the test set
         plt.figure()
-        plt.title(f"Decision boundary for dataset {dataset_name}\nwith k={k}")
+        plt.title(f"Decision Boundary for Dataset {dataset_name}\nwith k={k}")
         plot_decision_boundary(X_train, knn)
         plot_dataset(X_train, y_train)
         plt.show()
 
-    # This should find the best parameters for the noisy dataset.
+    # Find the best parameters for the noisy dataset using grid search
     grid_search_knn_and_plot_decision_boundary(X_train, y_train, X_test, y_test, dataset_name=dataset_name)
 
 
