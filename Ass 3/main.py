@@ -191,7 +191,10 @@ def task3_1():
             #       Hint: Check the `cv_results_` attribute of the `GridSearchCV` object
             cv_val_accuracy[n_estimators] =  grid_search.cv_results_['mean_test_score']
             cv_train_accuracy[n_estimators] = grid_search.cv_results_['mean_train_score']
-
+            print(f"Dataset {idx}, n_estimators={n_estimators}")
+            print(f"Best max_depth: {grid_search.best_params_['max_depth']}")
+            print(f"Mean CV training accuracy: {cv_train_accuracy[n_estimators].mean():.4f}")
+            print(f"Mean CV validation accuracy: {cv_val_accuracy[n_estimators].mean():.4f}\n")
             # This plots the decision boundary with just the training dataset
             plt.figure()
             plot_decision_boundary(X_train, grid_search)
@@ -214,15 +217,15 @@ def task3_1():
         plt.legend()
         plt.show()
 
-    # Done: Instantiate a RandomForestClassifier with the best parameters for each dataset and
-    #       report the test scores (using X_test, y_test) for each dataset.
-    best_n_estimators = 100 if cv_val_accuracy[100].max() > cv_val_accuracy[1].max() else 1
-    best_max_depth = max_depth_list[np.argmax(cv_val_accuracy[best_n_estimators])]
-    best_rf = RandomForestClassifier(n_estimators=best_n_estimators, max_depth=best_max_depth, random_state=0)
-    best_rf.fit(X_train, y_train)
-    test_score = best_rf.score(X_test, y_test)
-    print(f"Best parameters for dataset {idx}: n_estimators={best_n_estimators}, max_depth={best_max_depth}")
-    print(f"Test set accuracy for dataset {idx} with best parameters: {test_score * 100:.2f}%")
+        # Done: Instantiate a RandomForestClassifier with the best parameters for each dataset and
+        #       report the test scores (using X_test, y_test) for each dataset.
+        best_n_estimators = 100 if cv_val_accuracy[100].max() > cv_val_accuracy[1].max() else 1
+        best_max_depth = max_depth_list[np.argmax(cv_val_accuracy[best_n_estimators])]
+        best_rf = RandomForestClassifier(n_estimators=best_n_estimators, max_depth=best_max_depth, random_state=0)
+        best_rf.fit(X_train, y_train)
+        test_score = best_rf.score(X_test, y_test)
+        print(f"Best parameters for dataset {idx}: n_estimators={best_n_estimators}, max_depth={best_max_depth}")
+        print(f"Test set accuracy for dataset {idx} with best parameters: {test_score * 100:.2f}%")
 
 def task3_bonus():
     X_train, X_test, y_train, y_test = get_toy_dataset(4)
@@ -243,11 +246,11 @@ def task3_bonus():
     #       See https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.barh.html
     feature_importances = rf.feature_importances_
     plt.figure(figsize=(10, 8))
-    plt.barh(np.arange(len(feature_importances)), feature_importances)
+    plt.barh(np.arange(len(feature_importances)), feature_importances, align='center')
+    plt.yticks(np.arange(len(feature_importances)), np.arange(1, len(feature_importances) + 1))
     plt.xlabel('Feature Importance')
     plt.ylabel('Feature Index')
     plt.title('Feature Importances from Random Forest')
-    #plt.savefig('feature_importances.png')
     plt.show()
 
     # Done: Use recursive feature elimination to automatically choose the best number of parameters.
@@ -264,13 +267,14 @@ def task3_bonus():
     X_train_transformed = rfecv.transform(X_train)
     X_test_transformed = rfecv.transform(X_test)
 
-    # Done: If the CV performance of this SVC is better, transform the test dataset as well and report the test score.
-    #       If the performance is worse, report the test score of the previous SVC.
     grid_search_svc_transformed = GridSearchCV(SVC(), param_grid_svc, cv=5, scoring='accuracy')
     grid_search_svc_transformed.fit(X_train_transformed, y_train)
     best_svc_transformed = grid_search_svc_transformed.best_estimator_
     svc_cv_accuracy_transformed = cross_val_score(best_svc_transformed, X_train_transformed, y_train, cv=5).mean()
     print(f"Mean CV accuracy of the SVC after RFE: {svc_cv_accuracy_transformed:.4f}")
+
+    # Done: If the CV performance of this SVC is better, transform the test dataset as well and report the test score.
+    #       If the performance is worse, report the test score of the previous SVC.
     # Compare performance and report test score
     if svc_cv_accuracy_transformed > svc_cv_accuracy:
         test_score = best_svc_transformed.score(X_test_transformed, y_test)
@@ -282,13 +286,13 @@ def task3_bonus():
 
 if __name__ == '__main__':
     # Task 1.1 consists of implementing the KNearestNeighborsClassifier class
-    #task1_2()
+    task1_2()
     # Task 1.3 does not need code to be answered
-    #task1_4()
+    task1_4()
 
     # Task 2.1 consists of a pen & paper exercise and the implementation of the LinearSVM class
-    #task2_2()
-    #task2_3()
+    task2_2()
+    task2_3()
 
     task3_1()
     # Task 3.2 is a theory question
