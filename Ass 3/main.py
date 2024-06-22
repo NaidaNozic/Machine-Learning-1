@@ -89,6 +89,7 @@ def task1_4():
         plt.title(f"Decision Boundary for Dataset {dataset_name}\nwith k={k}")
         plot_decision_boundary(X_train, knn)
         plot_dataset(X_train, y_train)
+        plt.savefig(f"decision_boundary_{dataset_name}_with k={k}.png")
         plt.show()
 
     # Find the best parameters for the noisy dataset using grid search
@@ -131,12 +132,14 @@ def task2_2():
     plt.title('Loss over iterations')
     plt.xlabel('Iteration')
     plt.ylabel('Loss')
+    plt.savefig(f"Loss over iterations.png")
     plt.show()
 
     # This plots the decision boundary
     plt.figure()
     plot_dataset(X_train, y_train, X_test, y_test)
     plot_decision_boundary(X_train, svm)
+    plt.savefig(f"Descbound_SVM.png")
     plt.show()
 
 
@@ -165,6 +168,7 @@ def task2_3():
         plt.title(f"[SVM] Decision boundary for dataset {idx}\nwith params={grid_search.best_params_}")
         plot_dataset(X_train, y_train, X_test, y_test)
         plot_decision_boundary(X_train, grid_search)
+        plt.savefig(f"SVM Decision boundary for dataset {idx}_with best_params.png")
         plt.show()
 
 
@@ -201,6 +205,7 @@ def task3_1():
             plot_dataset(X_train, y_train)
             plt.title(f"Decision boundary for dataset {idx}\n"
                       f"n_estimators={n_estimators}, max_depth={grid_search.best_params_['max_depth']}")
+            plt.savefig(f"Decision boundary for dataset {idx}_n_estimators={n_estimators}, max_depth={grid_search.best_params_['max_depth']}.png")
             plt.show()
 
         # Done: Create a plot that shows the mean training and validation scores (y axis)
@@ -214,6 +219,7 @@ def task3_1():
         plt.xlabel('max_depth')
         plt.ylabel('Score')
         plt.title(f"Training and Validation Scores for Dataset {idx}")
+        plt.savefig(f"Training and Validation Scores for Dataset {idx}.png")
         plt.legend()
         plt.show()
 
@@ -251,6 +257,8 @@ def task3_bonus():
     plt.xlabel('Feature Importance')
     plt.ylabel('Feature Index')
     plt.title('Feature Importances from Random Forest')
+    plt.savefig(f"Feature Importances from Random Forest.png")
+
     plt.show()
 
     # Done: Use recursive feature elimination to automatically choose the best number of parameters.
@@ -291,6 +299,7 @@ if __name__ == '__main__':
     task1_4()
 
     # Task 2.1 consists of a pen & paper exercise and the implementation of the LinearSVM class
+   
     task2_2()
     task2_3()
 
