@@ -10,9 +10,13 @@ def wcss(X: np.ndarray, K: int, Z: np.ndarray, centroids: np.ndarray) -> float:
     :param centroids: means of clusters, K vectors of dimension D, shape: (K, D)
     :return: objective function WCSS - a scalar value
     """
-
-    # TODO: Calculate WCSS and return it
-    return None
+    # Calculate WCSS and return it
+    wcss = 0.0
+    for k in range(K):
+        cluster_points = X[Z[:, k] == 1]
+        centroid = centroids[k]
+        wcss += np.sum((cluster_points - centroid) ** 2)
+    return wcss
 
 
 def closest_centroid(sample: np.ndarray, centroids: np.ndarray) -> int:
@@ -22,9 +26,10 @@ def closest_centroid(sample: np.ndarray, centroids: np.ndarray) -> int:
     :return: idx_closest_cluster, that is, the index of the closest cluster
     """
 
-    # TODO: Calculate distance of the current sample to each centroid.
-    #       Afterwards you should return the index of the closest centroid (int value from 0 to (K-1))
-    return None
+    # Calculate distance of the current sample to each centroid.
+    # Afterwards you should return the index of the closest centroid (int value from 0 to (K-1))
+    distances = np.linalg.norm(centroids - sample, axis=1)
+    return np.argmin(distances)
 
 
 def compute_Z(X: np.ndarray, K: int, centroids: np.ndarray) -> np.ndarray:
@@ -36,9 +41,13 @@ def compute_Z(X: np.ndarray, K: int, centroids: np.ndarray) -> np.ndarray:
     """
 
     N = X.shape[0]
-    # TODO: Compute Z matrix which holds the indicator variables for all data points (using `closest_centroid`).
-    #       The indicator variables represent the cluster assignments of each data point.
+    # Initial Z matrix with zero values
     Z = np.zeros((N, K))
+    for i in range(N):
+        # This will find the closest centroid index 
+        closest_idx = closest_centroid(X[i], centroids)
+        # The specific element is set to 1 in the matrix Z
+        Z[i, closest_idx] = 1 
 
     assert len(np.unique(Z)) == 2 and np.min(Z) == 0 and np.max(Z) == 1, 'Z should be a matrix of zeros and ones'
     assert np.all(np.sum(Z, axis=1) == np.ones(Z.shape[0])), 'Each data point should be assigned to exactly 1 cluster'
@@ -54,9 +63,13 @@ def recompute_centroids(X: np.ndarray, K: int, Z: np.ndarray) -> np.ndarray:
     """
 
     D = X.shape[1]
-    # TODO: Recompute centroids
     centroids = np.zeros((K, D))
-
+    for k in range(K):
+        # We are taking the points assigned to the k cluster
+        cluster_points = X[Z[:, k] == 1]
+        # Calculating the mean of the points in k cluster
+        if len(cluster_points) > 0:
+            centroids[k] = np.mean(cluster_points, axis=0)
     return centroids
 
 
@@ -82,13 +95,13 @@ def kmeans(X: np.ndarray, K: int, max_iter: int, eps=1e-6) -> Tuple[np.ndarray, 
     wcss_list = []
     for it in range(max_iter):
         # Assign samples to the clusters (compute Z)
-        Z = None # TODO: function call to assign samples to clusters
-        loss = 0 # TODO: function call to calculate WCSS
+        Z = compute_Z(X, K, centroids) # function call to assign samples to clusters
+        loss = wcss(X, K, Z, centroids) # function call to calculate WCSS
         wcss_list.append(loss)
 
         # Calculate new centroids from the clusters
-        centroids = None # TODO: function call to recompute centroids
-        loss = 0 # TODO: function call to calculate WCSS (again)
+        centroids = recompute_centroids(X, K, Z) # function call to recompute centroids
+        loss = wcss(X, K, Z, centroids) # function call to calculate WCSS (again)
         wcss_list.append(loss)
 
         if it > 0 and np.abs(wcss_list[-1] - wcss_list[-2]) < eps:
