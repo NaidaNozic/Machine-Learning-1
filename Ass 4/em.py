@@ -13,11 +13,21 @@ def calculate_responsibilities(X: np.ndarray, means: np.ndarray, sigmas: np.ndar
     """
     N, K = X.shape[0], means.shape[0]
 
-    # TODO: Calculate responsibilities. You can use the multivariate_normal.pdf function from scipy.stats, see
+    # DONE: Calculate responsibilities. You can use the multivariate_normal.pdf function from scipy.stats, see
     #       https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.multivariate_normal.html
     #       Note that `multivariate_normal` is already imported.
     responsibilities = np.zeros((N, K))  # Stores all \gamma_{ik} from the HW sheet
-
+    # Calculate the numerator of \gamma_{ik} for each data point i and component k
+    for k in range(K):
+        # For component k, calculate the weighted probability density for all data points
+        responsibilities[:, k] = weights[k] * multivariate_normal.pdf(X, mean=means[k], cov=sigmas[k])
+    
+    # Calculate the denominator of \gamma_{ik} for each data point i
+    # This is the sum of the numerators across all components for each data point
+    sum_responsibilities = np.sum(responsibilities, axis=1, keepdims=True)
+    
+    # Normalize the responsibilities by dividing each numerator by the sum of numerators for the corresponding data point
+    responsibilities /= sum_responsibilities
     return responsibilities
 
 
@@ -35,11 +45,19 @@ def update_parameters(X: np.ndarray, means: np.ndarray, sigmas: np.ndarray,
     """
     N, K = X.shape[0], means.shape[0]
 
-    # TODO: Calculate means_new, sigmas_new, weights_new using responsibilities
+    # DONE: Calculate means_new, sigmas_new, weights_new using responsibilities
     means_new = np.zeros_like(means)
     sigmas_new = np.zeros_like(sigmas)
     weights_new = np.zeros_like(weights)
-
+    # Calculate means_new   
+    for k in range(K):
+        means_new[k] = np.sum(responsibilities[:, k][:, np.newaxis] * X, axis=0) / np.sum(responsibilities[:, k])
+    # Calculate sigmas_new
+    for k in range(K):
+        diff = X - means_new[k]
+        sigmas_new[k] = np.dot((responsibilities[:, k][:, np.newaxis] * diff).T, diff) / np.sum(responsibilities[:, k])
+     # Calculate weights_new
+    weights_new = np.sum(responsibilities, axis=0) / N
     return means_new, sigmas_new, weights_new
 
 
@@ -70,11 +88,11 @@ def em(X: np.ndarray, K: int, max_iter: int, eps=1e-2, init_variance=1.5) -> Tup
     log_likelihood = []
     for it in range(max_iter):
         # E-Step
-        # TODO: Call the appropriate function
-
+        # DONE: Call the appropriate function
+        responsibilities = calculate_responsibilities(X, means, sigmas, weights)
         # M-Step
-        # TODO: Call the appropriate function
-
+        # DONE: Call the appropriate function
+        means, sigmas, weights = update_parameters(X, means, sigmas, weights, responsibilities)
         # Evaluate log-likelihood under the current model (with parameters means, sigmas, weights)
         soft_clusters = np.zeros((N, K))
         for k in range(K):

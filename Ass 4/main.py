@@ -14,8 +14,8 @@ def task_kmeans(X):
 
 
 def task_em(X):
-    K = None # TODO: Choose the number of clusters
-    max_iter = None # TODO: Choose the maximum number of iterations
+    K =  None # Todo: Choose the number of clusters
+    max_iter = None # Todo: Choose the maximum number of iterations
     means, soft_clusters, log_likelihood = em(X, K, max_iter)
 
     plot_objective_function(log_likelihood, ylabel='Log-likelihood')
